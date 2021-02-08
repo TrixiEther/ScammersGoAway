@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">ScammersGoAway</string>
+    <string name="rule_activity">Rules</string>
+    <string name="statictic_activity">Statistic</string>
+    <string name="add_rule">Add rule</string>
+    <string name="rule_name">Rule name:</string>
+    <string name="rule_name_default">Rule 1</string>
+    <string name="rule_type">Type:</string>
+    <string name="rule_value">Value:</string>
+    <string name="create_rule">Create rule</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="rule_type_code">Phone code</string>
+    <string name="rule_type_phone">Phone</string>
+</resources>

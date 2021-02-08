@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/ruleListFragment">
+
+    <fragment
+        android:id="@+id/ruleListFragment"
+        android:name="com.example.scammersgoaway.fragments.RuleListFragment"
+        android:label="fragment_rule_list"
+        tools:layout="@layout/fragment_rule_list" >
+        <action
+            android:id="@+id/action_ruleListFragment_to_addRuleFragment"
+            app:destination="@id/addRuleFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addRuleFragment"
+        android:name="com.example.scammersgoaway.fragments.AddRuleFragment"
+        android:label="fragment_add_rule"
+        tools:layout="@layout/fragment_add_rule" >
+        <action
+            android:id="@+id/action_addRuleFragment_to_ruleListFragment"
+            app:destination="@id/ruleListFragment" />
+    </fragment>
+</navigation>

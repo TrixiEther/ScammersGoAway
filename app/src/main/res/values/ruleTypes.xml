@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="ruleTypes">
+        <item>@string/rule_type_phone</item>
+        <item>@string/rule_type_code</item>
+    </array>
+</resources>
