@@ -3,6 +3,7 @@ package com.example.scammersgoaway.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +13,14 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.scammersgoaway.R;
-import com.example.scammersgoaway.database.DatabaseHelper;
+import com.example.scammersgoaway.database.DB;
 
 public class RuleCursorAdapter extends SimpleCursorAdapter {
 
     private int layout;
 
-    public RuleCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to) {
-        super(context, layout, c, from, to, FLAG_REGISTER_CONTENT_OBSERVER);
+    public RuleCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flag) {
+        super(context, layout, c, from, to, flag);
         this.layout = layout;
     }
 
@@ -38,10 +39,10 @@ public class RuleCursorAdapter extends SimpleCursorAdapter {
         TextView ruleValue = (TextView)view.findViewById(R.id.ruleValue);
         Switch ruleActive = (Switch)view.findViewById(R.id.ruleActive);
 
-        ruleName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.RULES_COLUMN_NAME)));
-        ruleType.setText(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.RULES_COLUMN_TYPE)));
-        ruleValue.setText(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.RULES_COLUMN_VALUE)));
-        ruleActive.setChecked((cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.RULES_COLUMN_ACTIVE))) == 1);
+        ruleName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DB.RULES_COLUMN_NAME)));
+        ruleType.setText(cursor.getString(cursor.getColumnIndexOrThrow(DB.RULES_COLUMN_TYPE)));
+        ruleValue.setText(cursor.getString(cursor.getColumnIndexOrThrow(DB.RULES_COLUMN_VALUE)));
+        ruleActive.setChecked((cursor.getInt(cursor.getColumnIndexOrThrow(DB.RULES_COLUMN_ACTIVE))) == 1);
 
     }
 

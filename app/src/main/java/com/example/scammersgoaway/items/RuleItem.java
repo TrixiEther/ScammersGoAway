@@ -1,11 +1,15 @@
 package com.example.scammersgoaway.items;
 
+import java.util.Map;
+
 public class RuleItem {
 
     private String _name;
     private String _type;
     private String _value;
     private boolean _active;
+
+    private static Map<Short,String>[] _typesMaps;
 
     public RuleItem(String n, String t, String v, boolean a) {
         _name = n;

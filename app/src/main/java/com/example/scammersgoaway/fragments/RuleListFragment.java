@@ -1,42 +1,43 @@
 package com.example.scammersgoaway.fragments;
 
+import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.cursoradapter.widget.SimpleCursorAdapter;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.scammersgoaway.R;
-import com.example.scammersgoaway.adapters.RuleArrayAdapter;
 import com.example.scammersgoaway.adapters.RuleCursorAdapter;
-import com.example.scammersgoaway.database.DatabaseHelper;
-import com.example.scammersgoaway.items.RuleItem;
+import com.example.scammersgoaway.database.DB;
 
-import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
-public class RuleListFragment extends Fragment {
+public class RuleListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     //final ArrayList<RuleItem> ruleList = new ArrayList<RuleItem>();
     //ArrayAdapter<String> ruleAdapter;
 
-    DatabaseHelper databaseHelper;
-    SQLiteDatabase db;
-    Cursor ruleCursor;
+    View thisView;
+
+    ListView lvRules;
+    DB db;
     RuleCursorAdapter ruleAdapter;
 
-    String[] rulesFrom = {DatabaseHelper.RULES_COLUMN_NAME,
-            DatabaseHelper.RULES_COLUMN_TYPE,
-            DatabaseHelper.RULES_COLUMN_VALUE,
-            DatabaseHelper.RULES_COLUMN_ACTIVE
+    String[] rulesFrom = {DB.RULES_COLUMN_NAME,
+            DB.RULES_COLUMN_TYPE,
+            DB.RULES_COLUMN_VALUE,
+            DB.RULES_COLUMN_ACTIVE
     };
     int[] rulesTo = {
             R.id.ruleName,
@@ -72,21 +73,14 @@ public class RuleListFragment extends Fragment {
         ListView ruleListView = view.findViewById(R.id.ruleList);
         ruleAdapter = new RuleArrayAdapter(view.getContext(), R.layout.rule_item, ruleList);
         ruleListView.setAdapter(ruleAdapter);*/
+        thisView = view;
+        db = new DB(view.getContext());
+        db.open();
+        ruleAdapter = new RuleCursorAdapter(view.getContext(), R.layout.rule_item, db.getAllData(), rulesFrom, rulesTo, 0);
+        lvRules = (ListView)view.findViewById(R.id.ruleList);
+        lvRules.setAdapter(ruleAdapter);
 
-        ListView ruleListView = view.findViewById(R.id.ruleList);
-
-        databaseHelper = new DatabaseHelper(view.getContext());
-        db = databaseHelper.getReadableDatabase();
-        databaseHelper.onCreate(db);
-        ruleCursor = databaseHelper.getRulesAllCursor();
-        ruleAdapter = new RuleCursorAdapter(
-                view.getContext(),
-                R.layout.fragment_rule_list,
-                ruleCursor,
-                rulesFrom,
-                rulesTo
-        );
-        ruleListView.setAdapter(ruleAdapter);
+        registerForContextMenu(lvRules);
 
         view.findViewById(R.id.addNewRule).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,5 +89,43 @@ public class RuleListFragment extends Fragment {
             }
 
         });
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        return new MyCursorLoader(thisView.getContext(), db);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        ruleAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+
+    }
+
+    static class MyCursorLoader extends CursorLoader {
+
+        DB db;
+
+        public MyCursorLoader(Context context, DB db) {
+            super(context);
+            this.db = db;
+        }
+
+        @Override
+        public Cursor loadInBackground() {
+            Cursor cursor = db.getAllData();
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return cursor;
+        }
+
     }
 }
